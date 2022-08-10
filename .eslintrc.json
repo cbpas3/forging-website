@@ -12,6 +12,7 @@
         "ecmaFeatures": {
             "jsx": true
         },
+        "require-jsdoc":"off",
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
@@ -19,5 +20,6 @@
         "react"
     ],
     "rules": {
+        "require-jsdoc":"off"
     }
 }
