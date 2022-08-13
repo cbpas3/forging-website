@@ -6,10 +6,10 @@ export const NavBarButton = ({ className, ...props }) => {
 	const classes = twMerge(`
         text-white
         border
-        bg-indigo-200
-        border-indigo-200
+        bg-indigo-400
+        border-indigo-400
         hover:bg-transparent
-        hover:text-indigo-200
+        hover:text-indigo-400
         rounded-md
         px-8
         py-3

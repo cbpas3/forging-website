@@ -10,7 +10,8 @@ function App() {
 	const [address, setAddress] = useState('');
 	const [balance, setBalance] = useState(0.0);
 	const [provider, setProvider] = useState(null);
-
+	const [buttonChoices, setButtonChoices] = useState([]);
+	const [popUpBool, setPopUpBool] = useState(false);
 	// const [loading, setLoading] = useState(false);
 	const [tokenBalance, setTokenBalance] = useState({
 		Red: 0,
@@ -36,6 +37,7 @@ function App() {
 				setProvider={setProvider}
 				tokenBalance={tokenBalance}
 				setTokenBalance={setTokenBalance}
+				setButtonChoices={setButtonChoices}
 			/>
 			<div className='flex justify-center overflow-auto h-screen w-full'>
 				{window.ethereum ? (
@@ -50,6 +52,9 @@ function App() {
 						setProvider={setProvider}
 						tokenBalance={tokenBalance}
 						setTokenBalance={setTokenBalance}
+						buttonChoices={buttonChoices}
+						popUpBool={popUpBool}
+						setPopUpBool={setPopUpBool}
 					/>
 				) : (
 					'Install metamask'

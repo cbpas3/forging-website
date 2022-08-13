@@ -19,6 +19,7 @@ const Navbar = ({
 	setProvider,
 	tokenBalance,
 	setTokenBalance,
+	setButtonChoices,
 }) => {
 	const [nav, setNav] = useState(false);
 	const handleClickHamburger = () => setNav(!nav);
@@ -50,6 +51,23 @@ const Navbar = ({
 							setBalance(userData.balancePolygon);
 							setProvider(userData.provider);
 							setTokenBalance(userData.balanceTokens);
+							const tempArr = [];
+							if (userData.balanceTokens.Green > 0) {
+								tempArr.push('Green');
+							}
+
+							if (userData.balanceTokens.Brown > 0) {
+								tempArr.push('Brown');
+							}
+
+							if (userData.balanceTokens.Orange > 0) {
+								tempArr.push('Orange');
+							}
+
+							if (userData.balanceTokens.Pink > 0) {
+								tempArr.push('Pink');
+							}
+							setButtonChoices(tempArr);
 						}}
 					/>
 				</div>
@@ -89,6 +107,7 @@ Navbar.propTypes = {
 	setProvider: PropTypes.func,
 	tokenBalance: PropTypes.object,
 	setTokenBalance: PropTypes.func,
+	setButtonChoices: PropTypes.func,
 };
 
 export default Navbar;

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Card } from './Card';
-import { connectToMetamask, forge, smelt } from '../utils/Ethers';
+import { forge, smelt } from '../utils/Ethers';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
+import { Popup } from './Popup';
 /**
  * Returns mint page component
  * @return {React.ReactElement}
@@ -18,6 +19,9 @@ export const Mintpage = ({
 	setProvider,
 	tokenBalance,
 	setTokenBalance,
+	buttonChoices,
+	popUpBool,
+	setPopUpBool,
 }) => {
 	const tokens = ['Red', 'Black', 'Blue', 'Brown', 'Green', 'Orange', 'Pink'];
 	const [hoveredOn, setHoveredOn] = useState({
@@ -27,24 +31,22 @@ export const Mintpage = ({
 		Pink: false,
 	});
 
+	// const getButtons = (choices) => {
+	//     return (choices.map((choice) => {
+	//         <button
+	//             className='inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-indigo-400 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
+	//             onClick={() => {
+	//                 console.log(choice)
+	//             }}
+	//         >
+	//             {choice}
+	//         </button>
+	//     }))
+	// }
 	return (
 		<div className='w-screen p-10 pt-20 flex justify-center items-center bg-gradient-to-r from-indigo-200 via-red-200 to-yellow-100'>
 			{address == '' ? (
-				<button
-					className='bg-gray-200'
-					onClick={async () => {
-						const userData = await connectToMetamask();
-						setAddress(userData.address);
-						setBalance(userData.balancePolygon);
-						setProvider(userData.provider);
-						setTokenBalance(userData.balanceTokens);
-						console.log('Provider');
-						console.log(userData);
-					}}
-				>
-					{' '}
-					Connect Wallet
-				</button>
+				''
 			) : (
 				<div className='grid grid-rows-2 gap-10 my-auto'>
 					<div className='flex items-center justify-center gap-10'>
@@ -62,6 +64,8 @@ export const Mintpage = ({
 										onSmelt={smelt}
 										tokenBalance={tokenBalance}
 										setTokenBalance={setTokenBalance}
+										secondRow={false}
+										setPopUpBool={setPopUpBool}
 									/>
 								);
 							}
@@ -71,21 +75,55 @@ export const Mintpage = ({
 						{tokens.map((name, index) => {
 							if (index >= 3) {
 								return (
-									<Card
-										key={index}
-										text={'Forge'}
-										name={name}
-										provider={provider}
-										hoveredOn={hoveredOn}
-										setHoveredOn={setHoveredOn}
-										onForge={forge}
-										onSmelt={smelt}
-										tokenBalance={tokenBalance}
-										setTokenBalance={setTokenBalance}
-									/>
+									<div>
+										<Card
+											key={index}
+											text={'Forge'}
+											name={name}
+											provider={provider}
+											hoveredOn={hoveredOn}
+											setHoveredOn={setHoveredOn}
+											onForge={forge}
+											onSmelt={smelt}
+											tokenBalance={tokenBalance}
+											setTokenBalance={setTokenBalance}
+											secondRow={true}
+											setPopUpBool={setPopUpBool}
+										/>
+									</div>
 								);
 							}
 						})}
+						{popUpBool ? (
+							<Popup
+								name={name}
+								trigger={popUpBool}
+								setButtonPopup={setPopUpBool}
+							>
+								<div className='p-2 w-full h-full grid grid-rows-2'>
+									<div className='row1 flex justify-center items-center'>
+										<h1>{`Which token will your trade in?`}</h1>
+									</div>
+									<div className='row2 flex justify-center items-center'>
+										{buttonChoices.map((choice, index) => {
+											return (
+												<button
+													key={index}
+													className='inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-indigo-400 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
+													onClick={() => {
+														console.log(choice);
+													}}
+												>
+													{choice}
+												</button>
+											);
+										})}
+									</div>
+								</div>
+							</Popup>
+						) : (
+							''
+						)}
 					</div>
 					{/* <SteppedLineTo fromAnchor='bottom center' toAnchor='top center' orientation='v' delay={0} from="Blue" to="Violet" className={`${hoveredOn['Violet'] ? STYLE_ON_HOVER : style1}`} />
                     <SteppedLineTo fromAnchor='bottom center' toAnchor='top center' orientation='v' delay={0} from="Red" to="Violet" className={`${hoveredOn['Violet'] ? STYLE_ON_HOVER : style1}`} />
@@ -113,4 +151,7 @@ Mintpage.propTypes = {
 	setProvider: PropTypes.func,
 	tokenBalance: PropTypes.object,
 	setTokenBalance: PropTypes.func,
+	buttonChoices: PropTypes.array,
+	popUpBool: PropTypes.bool,
+	setPopUpBool: PropTypes.func,
 };
