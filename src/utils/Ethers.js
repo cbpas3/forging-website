@@ -4,6 +4,7 @@ import ForgeNFTsABI from '../files/ForgeNFTsABI.json';
 
 export async function connectToMetamask() {
 	try {
+		console.log('connectToMetamask: Switching to Polygon');
 		await window.ethereum.request({
 			method: 'wallet_switchEthereumChain',
 			params: [{ chainId: '0x89' }], // chainId must be in hexadecimal numbers
@@ -30,6 +31,7 @@ export async function connectToMetamask() {
 		}
 		console.error(error);
 	}
+	console.log('connectToMetamask: gettings accounts, balances & block #');
 	const provider = new ethers.providers.Web3Provider(window.ethereum);
 	const accounts = await provider.send('eth_requestAccounts', []);
 	const balance = await provider.getBalance(accounts[0]);
@@ -61,18 +63,36 @@ export async function getTokenBalance(provider, id, address) {
 }
 
 export async function getAllTokenBalances(provider, address) {
+	console.log('getAllTokenBalances: Starting');
 	const forgeContract = new ethers.Contract(
 		'0x7986127F5c24151f9d2acE39F13a4160eed006a0',
 		ForgeNFTsABI,
 		provider
 	);
-	const redBalance = await forgeContract.balanceOf(address, 0);
-	const blackBalance = await forgeContract.balanceOf(address, 1);
-	const blueBalance = await forgeContract.balanceOf(address, 2);
-	const brownBalance = await forgeContract.balanceOf(address, 3);
-	const greenBalance = await forgeContract.balanceOf(address, 4);
-	const orangeBalance = await forgeContract.balanceOf(address, 5);
-	const pinkBalance = await forgeContract.balanceOf(address, 6);
+	console.log('getAllTokenBalances: Getting token balances...');
+	let bigNumbers = await forgeContract.balanceOfBatch(
+		[address, address, address, address, address, address, address],
+		[0, 1, 2, 3, 4, 5, 6]
+	);
+	console.log('getAllTokenBalances: ...done');
+	bigNumbers = bigNumbers.map((biggie) => {
+		return biggie.toNumber();
+	});
+
+	const redBalance = bigNumbers[0];
+
+	const blackBalance = bigNumbers[1];
+
+	const blueBalance = bigNumbers[2];
+
+	const brownBalance = bigNumbers[3];
+
+	const greenBalance = bigNumbers[4];
+
+	const orangeBalance = bigNumbers[5];
+
+	const pinkBalance = bigNumbers[6];
+
 	return {
 		Red: redBalance,
 		Black: blackBalance,

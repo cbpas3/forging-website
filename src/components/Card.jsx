@@ -14,6 +14,7 @@ export const Card = ({
 	setTokenBalance,
 	secondRow,
 	setPopUpBool,
+	setTradingFor,
 }) => {
 	const ids = {
 		Red: 0,
@@ -117,7 +118,7 @@ export const Card = ({
 								className='inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-indigo-400 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
 								onClick={async () => {
 									try {
-										const result = await onForge(provider, ids[name]);
+										const result = await onSmelt(provider, ids[name]);
 										alert('Transaction hash: ' + result.hash);
 									} catch (error) {
 										const errorObject = { error };
@@ -127,7 +128,7 @@ export const Card = ({
 									}
 								}}
 							>
-								{text}
+								{'Smelt'}
 							</button>
 						) : (
 							''
@@ -135,7 +136,10 @@ export const Card = ({
 						{!secondRow ? (
 							<button
 								className='inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-indigo-400 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
-								onClick={() => setPopUpBool(true)}
+								onClick={() => {
+									setTradingFor(name);
+									setPopUpBool(true);
+								}}
 							>
 								{'Trade for'}
 							</button>
@@ -165,4 +169,5 @@ Card.propTypes = {
 	setTokenBalance: PropTypes.func,
 	secondRow: PropTypes.bool,
 	setPopUpBool: PropTypes.func,
+	setTradingFor: PropTypes.func,
 };

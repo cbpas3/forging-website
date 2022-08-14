@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from './Card';
-import { forge, smelt } from '../utils/Ethers';
+import { forge, smelt, trade } from '../utils/Ethers';
 import PropTypes from 'prop-types';
 import { ethers } from 'ethers';
 import { Popup } from './Popup';
@@ -30,7 +30,16 @@ export const Mintpage = ({
 		Orange: false,
 		Pink: false,
 	});
-
+	const [tradingFor, setTradingFor] = useState('');
+	const ids = {
+		Red: 0,
+		Black: 1,
+		Blue: 2,
+		Brown: 3,
+		Green: 4,
+		Orange: 5,
+		Pink: 6,
+	};
 	// const getButtons = (choices) => {
 	//     return (choices.map((choice) => {
 	//         <button
@@ -66,6 +75,7 @@ export const Mintpage = ({
 										setTokenBalance={setTokenBalance}
 										secondRow={false}
 										setPopUpBool={setPopUpBool}
+										setTradingFor={setTradingFor}
 									/>
 								);
 							}
@@ -89,6 +99,7 @@ export const Mintpage = ({
 											setTokenBalance={setTokenBalance}
 											secondRow={true}
 											setPopUpBool={setPopUpBool}
+											setTradingFor={() => {}}
 										/>
 									</div>
 								);
@@ -102,16 +113,28 @@ export const Mintpage = ({
 							>
 								<div className='p-2 w-full h-full grid grid-rows-2'>
 									<div className='row1 flex justify-center items-center'>
-										<h1>{`Which token will your trade in?`}</h1>
+										<h1>{`Which token will you trade in?`}</h1>
 									</div>
-									<div className='row2 flex justify-center items-center'>
+									<div className='row2 flex justify-center gap-2 items-center'>
 										{buttonChoices.map((choice, index) => {
 											return (
 												<button
 													key={index}
 													className='inline-flex items-center py-2 px-4 text-sm font-medium text-center text-white bg-indigo-400 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300'
-													onClick={() => {
-														console.log(choice);
+													onClick={async () => {
+														try {
+															const result = await trade(
+																provider,
+																ids[choice],
+																ids[tradingFor]
+															);
+															alert('Transaction hash: ' + result.hash);
+														} catch (error) {
+															const errorObject = { error };
+
+															const reason = errorObject.error.reason;
+															alert('revert reason:', string(reason));
+														}
 													}}
 												>
 													{choice}
